@@ -1,0 +1,33 @@
+<template>
+  <b-container fluid class="p-4 bg-dark border-top border-danger">
+    <b-row>
+      <RomanceMovieListItem
+        v-for="movie in movies"
+        :key="movie.id"
+        :movie="movie"
+      />
+    </b-row>
+  </b-container>
+</template>
+
+<script>
+import RomanceMovieListItem from "@/components/RomanceMovieListItem";
+
+export default {
+  name: "RomanceMovieList",
+  components: {
+    RomanceMovieListItem,
+  },
+  computed: {
+    movies() {
+      return this.$store.state.romance_movies;
+    },
+  },
+};
+</script>
+
+<style>
+.movie-list {
+  text-align: start;
+}
+</style>
