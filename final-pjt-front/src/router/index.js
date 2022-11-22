@@ -6,6 +6,9 @@ import MovieView from '@/views/MovieView'
 import MovieDetailView from '@/views/MovieDetailView'
 import FundingView from '@/views/FundingView'
 import FundingDetailView from '@/views/FundingDetailView'
+import FundingSearchView from '@/views/FundingSearchView'
+import ProfileView from '@/views/ProfileView'
+import FundingCreateView from '@/views/FundingCreateView'
 
 Vue.use(VueRouter)
 
@@ -21,15 +24,13 @@ const routes = [
     name: 'LogInView',
     component: LogInView
   },
-
   {
     path: '/',
     name: 'MovieView',
     component: MovieView
   },
-
   {
-    path: '/:id',
+    path: '/movie/:id',
     name: 'MovieDetailView',
     component: MovieDetailView,
   },
@@ -42,6 +43,21 @@ const routes = [
     path: '/fundings/:id',
     name: 'FundingDetailView',
     component: FundingDetailView
+  },
+  {
+    path: '/fundings/search',
+    name: 'FundingSearchView',
+    component: FundingSearchView
+  },
+  {
+    path: '/profile/:id',
+    name: 'ProfileView',
+    component: ProfileView
+  },
+  {
+    path: '/fundings/create',
+    name: 'FundingCreateView',
+    component: FundingCreateView
   }
 
 ]

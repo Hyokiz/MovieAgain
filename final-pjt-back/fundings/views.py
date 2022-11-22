@@ -13,11 +13,13 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404, get_list_or_404
 from .serializers import (
     CommentSerializer,
+    CommentListSerializer,
     BackerSerializer,
     FundingListSerializer,
     FundingSerializer,
 )
 from .models import Funding, Comment, Backers
+from django.db.models import Q, F
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -40,6 +42,15 @@ def funding_list(request):
             # serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+@api_view(['GET'])
+def funding_recommend_list(request):
+    if request.method == 'GET':
+        
+        
+        fundings = Funding.objects.all().order_by('expired_date')
+        
+        serializer = FundingSerializer(fundings, many=True)
+        return Response(serializer.data)
 
 @api_view(['GET', 'DELETE', 'POST'])
 # @permission_classes([IsAuthenticated])
@@ -49,7 +60,6 @@ def funding_detail(request, funding_pk):
 
     if request.method == 'GET':
         serializer = FundingSerializer(funding)
-        print(serializer.data)
         return Response(serializer.data)
     #  지금 유저랑 비교해서 글쓴 사람이 지울 수 있게 !!
     elif request.method == 'DELETE':
@@ -67,13 +77,10 @@ def funding_detail(request, funding_pk):
         serializer1 = BackerSerializer(data=request.data)
         if serializer1.is_valid(raise_exception=True):
             serializer1.save()
-        print(request.data, '11111111111111111111111111111')
         funding.now_money += int(request.data['donation'])
         serializer2 = FundingSerializer(funding)
         # if serializer.is_valid(raise_exception=True):
-        print(funding.now_money, '333333333333333333333333333333')
         funding.save()
-        print(serializer2.data, '2222222222222222222222222222')
         return Response(serializer2.data, status=status.HTTP_200_OK)
 
 
@@ -87,6 +94,7 @@ def comment_list(request):
 
 
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([IsAuthenticated])
 def comment_detail(request, comment_pk):
     # comment = Comment.objects.get(pk=comment_pk)
     comment = get_object_or_404(Comment, pk=comment_pk)
@@ -95,9 +103,10 @@ def comment_detail(request, comment_pk):
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
-    elif request.method == 'DELETE':
-        comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    if str(comment.user) == str(request.user):
+        if request.method == 'DELETE':
+            comment.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     elif request.method == 'PUT':
         serializer = CommentSerializer(comment, data=request.data)
@@ -107,6 +116,7 @@ def comment_detail(request, comment_pk):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def comment_create(request, funding_pk):
     # article = Article.objects.get(pk=article_pk)
     funding = get_object_or_404(Funding, pk=funding_pk)
@@ -114,3 +124,12 @@ def comment_create(request, funding_pk):
     if serializer.is_valid(raise_exception=True):
         serializer.save(funding=funding)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def funding_comment_list(request, funding_pk):
+    if request.method == 'GET':
+        comment = Comment.objects.filter(funding_id=funding_pk)
+        serializer = CommentListSerializer(comment, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

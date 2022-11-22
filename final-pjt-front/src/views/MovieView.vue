@@ -1,19 +1,26 @@
 <template>
   <div>
-    <div class="movieview">
+    <div class="movieview bg-dark">
       <MovieList />
     </div>
-    <h2>AdventureMovie</h2>
-    <AdventureMovieList />
-    <hr>
-    <h2>HorrorMovie</h2>
-    <HorrorMovieList />
-    <h2>Documentary</h2>
-    <DocumentaryMovieList />
-    <h2>Animation</h2>
-    <AnimationMovieList />
-    <h2>Romance</h2>
-    <RomanceMovieList />
+    <div>
+      <FundingRecommendList />
+    </div>
+    <div>
+      <AdventureMovieList />
+    </div>
+    <div>
+      <HorrorMovieList />
+    </div>
+    <div>
+      <DocumentaryMovieList />
+    </div>
+    <div>
+      <AnimationMovieList />
+    </div>
+    <div>
+      <RomanceMovieList />
+    </div>
   </div>
 </template>
 
@@ -25,11 +32,13 @@ import HorrorMovieList from "@/components/HorrorMovieList";
 import DocumentaryMovieList from "@/components/DocumentaryMovieList";
 import AnimationMovieList from "@/components/AnimationMovieList";
 import RomanceMovieList from "@/components/RomanceMovieList";
+import FundingRecommendList from "@/components/FundingRecommendList";
 
 export default {
   name: "MovieView",
   components: {
     MovieList,
+    FundingRecommendList,
     AdventureMovieList,
     HorrorMovieList,
     DocumentaryMovieList,
@@ -43,11 +52,12 @@ export default {
   },
   created() {
     this.getMovies();
+    this.getRecommendFundings();
     this.getAdventureMovies();
     this.getHorrorMovies();
-    this.getAnimationMovies()
-    this.getDocumentaryMovies()
-    this.getRomanceMovies()
+    this.getAnimationMovies();
+    this.getDocumentaryMovies();
+    this.getRomanceMovies();
   },
   methods: {
     getMovies() {
@@ -59,6 +69,9 @@ export default {
       //   this.$router.push({ name: "LogInView" });
       // }
     },
+    getRecommendFundings() {
+      this.$store.dispatch("getRecommendFundings");
+    },
     getAdventureMovies() {
       this.$store.dispatch("getAdventureMovies");
     },
@@ -66,14 +79,14 @@ export default {
       this.$store.dispatch("getHorrorMovies");
     },
     getAnimationMovies() {
-      this.$store.dispatch("getAnimationMovies")
+      this.$store.dispatch("getAnimationMovies");
     },
     getDocumentaryMovies() {
-      this.$store.dispatch("getDocumentaryMovies")
+      this.$store.dispatch("getDocumentaryMovies");
     },
     getRomanceMovies() {
-      this.$store.dispatch("getRomanceMovies")
-    }
+      this.$store.dispatch("getRomanceMovies");
+    },
   },
 };
 </script>
@@ -82,5 +95,10 @@ export default {
 .movieview {
   display: flex;
   justify-content: center;
+}
+
+h2 {
+  background-color: black;
+  margin-bottom: 0%;
 }
 </style>

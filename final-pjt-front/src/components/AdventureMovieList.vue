@@ -1,6 +1,7 @@
 <template>
   <b-container fluid class="p-4 bg-dark border-top border-danger">
     <b-row>
+      <h1 class="nes-text is-warning">Adventure</h1>
       <AdventureMovieListItem
       v-for="movie in movies"
       :key="movie.id"
@@ -30,4 +31,5 @@ export default {
 .movie-list {
   text-align: start;
 }
+
 </style>

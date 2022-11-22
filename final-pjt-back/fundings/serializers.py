@@ -8,6 +8,7 @@ class FundingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Funding
         fields = (
+            'id',
             'user',
             'goal_money',
             'now_money',
@@ -21,13 +22,26 @@ class FundingListSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    updated_at = serializers.DateTimeField(read_only=True)
-    created_at = serializers.DateTimeField(read_only=True)
+    # updated_at = serializers.DateTimeField(read_only=True)
+    # created_at = serializers.DateTimeField(read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Comment
         fields = '__all__'
-        read_only_fields = ('user', 'funding')
+        read_only_fields = ('funding',)
+
+
+class CommentListSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = (
+            'movie',
+            'user',
+        )
 
 
 class FundingSerializer(serializers.ModelSerializer):
@@ -57,6 +71,9 @@ class FundingSerializer(serializers.ModelSerializer):
 
 
 class BackerSerializer(serializers.ModelSerializer):
+    # funding 이 참조가능해짐
+    funding = FundingSerializer(read_only=True)
+
     class Meta:
         model = Backers
         fields = '__all__'
