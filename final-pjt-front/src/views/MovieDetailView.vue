@@ -1,11 +1,17 @@
+<!-- Movie Detail View -->
 <template>
   <div>
     <div>
       <div class="moviedetail">
+        <!-- Movie Poster -->
         <div class="border border-dark mx-3">
           <img class="poster" :src="img_url" alt="이미지 자리" />
         </div>
-        <b-card border-variant="dark" class="nes-container is-rounded is-dark me-3">
+        <b-card
+          border-variant="dark"
+          class="nes-container is-rounded is-dark me-3"
+        >
+        <!-- Movie Information -->
           <p>제목 : {{ movie?.title }}</p>
           <p>{{ movie?.overview }}</p>
           <p>개봉일 : {{ movie?.release_date }}</p>
@@ -23,9 +29,11 @@
         </b-card>
       </div>
       <div class="moviedetail2">
-        <router-link :to="{ name: 'MovieView'}">
+        <!-- Go to Back -->
+        <router-link :to="{ name: 'MovieView' }">
           <button class="nes-btn is-primary">Back</button>
         </router-link>
+        <!-- Movie Comment -->
         <MovieCommentForm ref="MovieCommentForm"></MovieCommentForm>
       </div>
     </div>
@@ -34,7 +42,8 @@
 
 <script>
 import axios from "axios";
-import MovieCommentForm from "@/components/MovieCommentForm";
+import MovieCommentForm from "@/components/Movies/MovieCommentForm";
+import swal from 'sweetalert';
 
 const API_URL = "http://127.0.0.1:8000";
 
@@ -65,17 +74,22 @@ export default {
         url: `${API_URL}/api/v1/movies/${this.$route.params.id}`,
       })
         .then((res) => {
-          // console.log(res);
           this.movie = res.data;
           this.img_url =
-            "https://image.tmdb.org/t/p/w300_and_h450_bestv2" + res.data.poster_path;
+            "https://image.tmdb.org/t/p/w300_and_h450_bestv2" +
+            res.data.poster_path;
           for (let object of this.movie.genre_ids) {
             this.genres.push(object.name);
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          this.$router.push({ name: "NotFound404"})
+          swal("영화 데이터가 존재하지 않습니다", "다시 시도해 보세요.", "error")
         });
+      if(!this.movie){
+        this.$router.push({name: 'NotFound404'})
+        swal("영화 데이터가 존재하지 않습니다", "다시 시도해 보세요.", "error")
+      }
     },
   },
 };

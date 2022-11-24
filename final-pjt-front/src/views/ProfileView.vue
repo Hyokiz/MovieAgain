@@ -1,16 +1,19 @@
+<!-- Profile View -->
 <template>
-  <div>
-    <h2>profile</h2>
-    <p>your name : {{ getUserName }} </p>
-    <p>당신이 가 참여한 펀딩 목록</p>
-    <div>
+  <div id="profile">
+    <h2>내 프로필</h2>
+    <p>---------------------</p>
+    <p>Welcome, {{ getUserName }}!</p>
+    <p>---------------------</p>
+    <div v-if="userFundings.length>0">
+      <p>👇{{getUserName}} 님이 펀딩 참여한 영화 목록👇</p>
       <UserFundingList/>
     </div>
   </div>
 </template>
 
 <script>
-import UserFundingList from '@/components/UserFundingList'
+import UserFundingList from '@/components/Profile/UserFundingList'
 export default {
   name: "ProfileView",
   components:{
@@ -20,13 +23,15 @@ export default {
     return {};
   },
   computed: {
+    userFundings(){
+      return this.$store.state.userFundings
+    },
     getUserId(){
       return this.$store.state.userId
     },
     getUserName(){
       return this.$store.state.username
     }
-    // getUsername() {},
   },
   created(){
     this.getUserFundings();
@@ -40,4 +45,7 @@ export default {
 </script>
 
 <style>
+#profile {
+  width: 100vw;
+}
 </style>
